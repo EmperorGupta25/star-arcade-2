@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Star Arcade · Free Browser Games</title>
+  <meta name="description" content="A lightweight HTML5 game hub you can host on GitHub Pages, with built‑in slots for Google AdSense." />
+  <meta name="theme-color" content="#0b1020" />
+  <!--
+    ===================== GOOGLE ADSENSE =====================
+    After your site is approved, paste your AdSense script below.
+    Replace ca-pub-XXXXXXXXXXXXXXXX with your publisher ID.
+
+    <script async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+      crossorigin="anonymous"></script>
+  -->
+  <style>
+    :root{
+      --bg:#0b1020;--bg-2:#0e1a34;--card:#121c39;--text:#eef2ff;--muted:#9fb0dc;--brand:#5eead4;
+      --shadow: 0 6px 30px rgba(0,0,0,.45);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0; padding:0; background:var(--bg); color:var(--text); font-family:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji"}
+    a{color:var(--brand); text-decoration:none}
+    a:hover{text-decoration:underline}
+    header{position:sticky; top:0; z-index:50; backdrop-filter:saturate(180%) blur(8px); background:rgba(11,16,32,.7); border-bottom:1px solid rgba(255,255,255,.06)}
+    .wrap{max-width:1100px; margin:0 auto; padding:18px}
+    .nav{display:flex; align-items:center; gap:16px}
+    .brand{display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.4px}
+    .brand-logo{width:28px; height:28px; border-radius:8px; background:linear-gradient(135deg,#38bdf8,#5eead4); box-shadow:var(--shadow)}
+    .spacer{flex:1}
+    .btn{background:linear-gradient(135deg,#38bdf8,#5eead4); color:#082f49; border:0; padding:10px 14px; border-radius:12px; font-weight:700; cursor:pointer; box-shadow:var(--shadow)}
+    main{display:grid; grid-template-columns: 1fr; gap:18px; padding:18px}
+    @media(min-width:980px){ main{grid-template-columns: 1fr 300px} }
+    .card{background:var(--card); border:1px solid rgba(255,255,255,.06); border-radius:18px; box-shadow:var(--shadow)}
+    .card h2{margin:0 0 6px 0}
+    .card .inner{padding:16px}
+    .grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:14px}
+    .tile{background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.06); border-radius:16px; overflow:hidden; transition: transform .2s ease}
+    .tile:hover{transform:translateY(-2px)}
+    .tile .thumb{aspect-ratio: 16/9; background:#0e1a34; display:flex; align-items:center; justify-content:center; font-weight:800; letter-spacing:1px; color:var(--muted)}
+    .tile .meta{padding:12px}
+    .muted{color:var(--muted); font-size:.95rem}
+    footer{padding:28px 18px 40px; color:var(--muted)}
+
+    /* Reserve space for ads (prevents layout shift). Adjust sizes to your preferred slots) */
+    .ad-slot{display:block; width:100%; min-height:90px; background:rgba(255,255,255,.03); border:1px dashed rgba(255,255,255,.12); border-radius:14px; color:var(--muted); text-align:center; padding:12px;}
+    .sticky-ad{position:sticky; top:88px}
+
+    /* Game canvas */
+    #gameWrap{padding:0; overflow:hidden}
+    #gameToolbar{display:flex; align-items:center; gap:12px; padding:12px 16px; border-bottom:1px solid rgba(255,255,255,.06); background:linear-gradient(180deg, rgba(255,255,255,.02), transparent)}
+    #gameCanvas{display:block; width:100%; height:auto; background: radial-gradient(1200px 600px at 50% -200px, #0e2a4c, #050914); border-bottom-left-radius:18px; border-bottom-right-radius:18px}
+    .pill{background:rgba(255,255,255,.08); padding:4px 10px; border-radius:999px; font-weight:700; font-size:.9rem}
+    .kbd{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas; font-size:.85rem}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <div class="brand"><span class="brand-logo"></span><span>Star Arcade</span></div>
+      <div class="spacer"></div>
+      <a class="pill" href="#games">Games</a>
+      <a class="pill" href="#about">About</a>
+      <a class="pill" href="#privacy">Privacy</a>
+      <button class="btn" onclick="document.getElementById('subscribe').scrollIntoView({behavior:'smooth'})">Subscribe</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- ===================== MAIN COLUMN ===================== -->
+    <section>
+      <!-- Top Banner Ad (Responsive) -->
+      <div class="card"><div class="inner">
+        <div class="ad-slot">
+          <!-- AdSense example (uncomment after approval)
+          <ins class="adsbygoogle"
+            style="display:block"
+            data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+            data-ad-slot="1234567890"
+            data-ad-format="auto"
+            data-full-width-responsive="true"></ins>
+          <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+          -->
+          <div>Ad Slot – Top Banner</div>
+        </div>
+      </div></div>
+
+      <!-- Featured Game -->
+      <div id="gameWrap" class="card">
+        <div id="gameToolbar">
+          <strong>🚀 Star Dodger</strong>
+          <span class="muted">· Use <span class="kbd">← →</span> or <span class="kbd">A D</span> to move · Avoid meteors · Grab orbs</span>
+          <span id="score" class="pill" style="margin-left:auto">Score: 0</span>
+        </div>
+        <canvas id="gameCanvas" width="900" height="520" aria-label="Star Dodger game canvas"></canvas>
+      </div>
+
+      <!-- Games Grid -->
+      <div id="games" class="card"><div class="inner">
+        <h2>More Games</h2>
+        <p class="muted">Add your own HTML5 games as separate folders or embed from itch.io or GitHub repos. Each tile can link to a game page or open a modal.</p>
+        <div class="grid">
+          <a class="tile" href="#" aria-label="Sample Game 1">
+            <div class="thumb">GAME</div>
+            <div class="meta">
+              <div><strong>Orb Runner</strong></div>
+              <div class="muted">Endless runner prototype</div>
+            </div>
+          </a>
+          <a class="tile" href="#" aria-label="Sample Game 2">
+            <div class="thumb">GAME</div>
+            <div class="meta">
+              <div><strong>Pixel Puzzler</strong></div>
+              <div class="muted">Casual puzzle demo</div>
+            </div>
+          </a>
+          <a class="tile" href="#" aria-label="Sample Game 3">
+            <div class="thumb">GAME</div>
+            <div class="meta">
+              <div><strong>Retro Racer</strong></div>
+              <div class="muted">Time‑trial micro racer</div>
+            </div>
+          </a>
+        </div>
+      </div></div>
+
+      <!-- In-Content Ad -->
+      <div class="card"><div class="inner">
+        <div class="ad-slot">
+          <!-- AdSense example (uncomment after approval)
+          <ins class="adsbygoogle"
+            style="display:block"
+            data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+            data-ad-slot="0987654321"
+            data-ad-format="rectangle"
+            data-full-width-responsive="true"></ins>
+          <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+          -->
+          <div>Ad Slot – In Content</div>
+        </div>
+      </div></div>
+
+      <div id="about" class="card"><div class="inner">
+        <h2>About</h2>
+        <p>Star Arcade is a minimalist HTML5 game hub built to run on GitHub Pages. It includes a featured canvas game, a grid for more titles, and pre‑reserved ad areas for Google AdSense so your layout won’t jump when ads load.</p>
+      </div></div>
+
+      <div id="privacy" class="card"><div class="inner">
+        <h2>Privacy & Cookies</h2>
+        <p class="muted">If you use Google AdSense, you’re responsible for complying with their policies, including a clear Privacy Policy and (if required in your region) a consent banner. Replace this paragraph with your policy.</p>
+      </div></div>
+
+      <div id="subscribe" class="card"><div class="inner">
+        <h2>Subscribe for Updates</h2>
+        <form onsubmit="event.preventDefault(); alert('Thanks! (Wire this up to your provider)')">
+          <label>Email<br>
+            <input required type="email" placeholder="you@example.com" style="width:100%; padding:12px 14px; margin-top:6px; border-radius:12px; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.04); color:var(--text)">
+          </label>
+          <div style="margin-top:12px">
+            <button class="btn" type="submit">Sign Up</button>
+          </div>
+        </form>
+      </div></div>
+
+    </section>
+
+    <!-- ===================== SIDEBAR ===================== -->
+    <aside>
+      <div class="card sticky-ad"><div class="inner">
+        <h3 style="margin-top:0">Sponsored</h3>
+        <div class="ad-slot" style="min-height:250px">
+          <!-- AdSense example (uncomment after approval)
+          <ins class="adsbygoogle"
+            style="display:block"
+            data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+            data-ad-slot="1122334455"
+            data-ad-format="auto"
+            data-full-width-responsive="true"></ins>
+          <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+          -->
+          <div>Ad Slot – Sidebar</div>
+        </div>
+      </div></div>
+
+      <div class="card"><div class="inner">
+        <h3 style="margin-top:0">How to add a new game</h3>
+        <ol class="muted">
+          <li>Create a folder like <code>/games/retro-racer</code> with your HTML/JS/CSS.</li>
+          <li>Link it from the grid above, or embed via <code>&lt;iframe src="games/retro-racer/index.html"&gt;</code>.</li>
+          <li>Keep assets small for fast loads on GitHub Pages.</li>
+        </ol>
+      </div></div>
+    </aside>
+  </main>
+
+  <footer class="wrap">
+    <div>© <span id="year"></span> Star Arcade · <a href="#privacy">Privacy</a></div>
+  </footer>
+
+  <script>
+    // Footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ===================== STAR DODGER (minimal canvas game) =====================
+    const c = document.getElementById('gameCanvas');
+    const ctx = c.getContext('2d');
+    const W = c.width, H = c.height;
+
+    const player = { x:W/2, y:H-70, w:36, h:20, vx:0, speed:6 };
+    const meteors = []; // obstacles
+    const orbs = [];    // collectibles
+    let tick = 0, score = 0, alive = true;
+
+    function rand(min,max){return Math.random()*(max-min)+min}
+
+    // Controls
+    const keys = new Set();
+    addEventListener('keydown', e=>{ if(['ArrowLeft','ArrowRight','a','d','A','D'].includes(e.key)) keys.add(e.key) });
+    addEventListener('keyup', e=>{ keys.delete(e.key) });
+
+    function spawn(){
+      if(tick%30===0){ // meteor
+        meteors.push({x:rand(10,W-10), y:-30, r:rand(8,22), vy:rand(2,6)});
+      }
+      if(tick%90===0){ // orb
+        orbs.push({x:rand(20,W-20), y:-20, r:10, vy:3});
+      }
+    }
+
+    function move(){
+      player.vx = 0;
+      if(keys.has('ArrowLeft')||keys.has('a')||keys.has('A')) player.vx -= player.speed;
+      if(keys.has('ArrowRight')||keys.has('d')||keys.has('D')) player.vx += player.speed;
+      player.x = Math.max(24, Math.min(W-24, player.x + player.vx));
+
+      meteors.forEach(m=> m.y += m.vy);
+      orbs.forEach(o=> o.y += o.vy);
+    }
+
+    function collide(){
+      // simple AABB for player (approximate ship)
+      const px = player.x-18, py = player.y-10, pw = 36, ph = 20;
+      for(const m of meteors){
+        const dx = Math.abs((px+pw/2) - m.x), dy = Math.abs((py+ph/2) - m.y);
+        if(dx < (pw/2 + m.r*0.8) && dy < (ph/2 + m.r*0.8)){
+          alive = false;
+        }
+      }
+      for(let i=orbs.length-1;i>=0;i--){
+        const o = orbs[i];
+        const dx = Math.abs((px+pw/2) - o.x), dy = Math.abs((py+ph/2) - o.y);
+        if(dx < (pw/2 + o.r) && dy < (ph/2 + o.r)){
+          score += 10; orbs.splice(i,1);
+          document.getElementById('score').textContent = 'Score: '+score;
+        }
+      }
+    }
+
+    function drawBackground(){
+      // starfield
+      ctx.clearRect(0,0,W,H);
+      for(let i=0;i<60;i++){
+        const x = (i*73 + tick*2) % W; const y = (i*151 + i*7) % H; const r = (i%5===0) ? 2 : 1;
+        ctx.fillStyle = 'rgba(255,255,255,.7)'; ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
+      }
+    }
+
+    function drawPlayer(){
+      ctx.save(); ctx.translate(player.x, player.y);
+      // body
+      ctx.fillStyle = '#9ae6b4';
+      ctx.beginPath(); ctx.moveTo(0,-12); ctx.lineTo(18,10); ctx.lineTo(-18,10); ctx.closePath(); ctx.fill();
+      // cockpit
+      ctx.fillStyle = '#93c5fd'; ctx.beginPath(); ctx.arc(0,-2,6,0,Math.PI*2); ctx.fill();
+      ctx.restore();
+    }
+
+    function drawMeteors(){
+      ctx.fillStyle = '#fca5a5';
+      meteors.forEach(m=>{ ctx.beginPath(); ctx.arc(m.x,m.y,m.r,0,Math.PI*2); ctx.fill(); });
+    }
+
+    function drawOrbs(){
+      ctx.fillStyle = '#fde68a';
+      orbs.forEach(o=>{ ctx.beginPath(); ctx.arc(o.x,o.y,o.r,0,Math.PI*2); ctx.fill(); });
+    }
+
+    function cleanup(){
+      for(let i=meteors.length-1;i>=0;i--){ if(meteors[i].y > H+40) meteors.splice(i,1); }
+      for(let i=orbs.length-1;i>=0;i--){ if(orbs[i].y > H+40) orbs.splice(i,1); }
+    }
+
+    function loop(){
+      if(!alive){
+        ctx.fillStyle = 'rgba(0,0,0,.5)'; ctx.fillRect(0,0,W,H);
+        ctx.fillStyle = '#fff'; ctx.font='bold 38px ui-sans-serif, system-ui';
+        ctx.textAlign='center'; ctx.fillText('Game Over', W/2, H/2 - 10);
+        ctx.font='16px ui-sans-serif, system-ui'; ctx.fillText('Press R to restart', W/2, H/2 + 24);
+        return;
+      }
+
+      tick++;
+      spawn();
+      move();
+      collide();
+      cleanup();
+
+      drawBackground();
+      drawOrbs();
+      drawMeteors();
+      drawPlayer();
+
+      requestAnimationFrame(loop);
+    }
+
+    addEventListener('keydown', e=>{
+      if(e.key==='r' || e.key==='R'){
+        alive = true; score = 0; document.getElementById('score').textContent = 'Score: 0';
+        meteors.length = 0; orbs.length = 0; tick = 0; loop();
+      }
+    });
+
+    // start
+    loop();
+  </script>
+</body>
+</html>
